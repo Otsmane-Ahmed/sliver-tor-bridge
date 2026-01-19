@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  sliver-tor-bridge:
+    build: .
+    container_name: sliver-tor-bridge
+    restart: unless-stopped
+    environment:
+      - SLIVER_HOST=host.docker.internal
+      - SLIVER_PORT=8443
+    volumes:
+      # Persist hidden service keys
+      - ./data/hidden_service:/app/sliver_hidden_service
+    # For accessing host's Sliver server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # Security: run as non-root
+    # user: "1000:1000"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
