@@ -95,6 +95,12 @@ sliver-tor-bridge stop      # clean up hidden service directory
 
 ## how it works
 
+```mermaid
+graph LR
+    Implant[Implant] -->|Tor Network| HS["Hidden Service (.onion)"]
+    HS -->|TCP :8080| Proxy["Bridge Proxy"]
+    Proxy -->|HTTPS :8443| Sliver["Sliver Server"]
+```
 1. tor manager starts a tor process and creates a hidden service
 2. hidden service points to localhost:8080 (the proxy)
 3. flask proxy listens on 8080 and forwards requests to sliver at localhost:8443
